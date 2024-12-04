@@ -1,0 +1,20 @@
+import docx, win32com.client, os.path
+doc = docx.Document('../Documents/style.docx')
+namefile = open('./automate_online-materials./guests.txt')
+guestnames = namefile.readlines()
+for i, guest in enumerate(guestnames):
+    doc.add_paragraph('It would be the pleasure to have the company of', 'Invitation')
+    doc.add_paragraph(f'{guest}', 'invitee')
+    doc.add_paragraph('at 11010 Memory Lane on the Evening of', 'Invitation')
+    doc.add_paragraph('April 1st', 'date')
+    last_paragraph = doc.add_paragraph("at 7 o'clock", 'Invitation')
+    if i < len(guestnames) - 1:
+        last_paragraph.runs[0].add_break(docx.enum.text.WD_BREAK.PAGE)
+doc.save('guest.docx')
+filename = os.path.abspath('guest.docx')
+pdf = os.path.abspath('guests.pdf')
+word = win32com.client.Dispatch('Word.Application')
+docpdf = word.Documents.Open(filename)
+docpdf.SaveAs(pdf, 17)
+docpdf.Close()
+word.Quit()
